@@ -108,5 +108,5 @@ while True:
     choose_difficulty()
     choose_language()
 
-    print(f"You have chosen: category: {first_prompt[0]}, difficulty: {first_prompt[1]}, language: {first_prompt[2]}")
+    print(f"You have chosen: \ncategory: {first_prompt[0]}, \ndifficulty: {first_prompt[1]}, \nlanguage: {first_prompt[2]}")
     break
