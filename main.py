@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 from google import genai
 import json
 import os
+import re
 
 load_dotenv()
 
@@ -12,7 +13,6 @@ if not API_KEY:
 
 client = genai.Client(api_key=API_KEY)
 
-res = {}
 first_prompt = []
 
 task_categories = [
@@ -151,15 +151,88 @@ Do not write anything except JSON.
     
     return response.text
 
+def parse_json(response_text):
+    try:
+        return json.loads(response_text)
+    except:
+        match = re.search(r"\{.*\}", response_text, re.DOTALL)
+
+        if match:
+            return json.loads(match.group())
+        else:
+            raise ValueError("Could not extract JSON from response")
+        
+def collect_answers(questions):
+    answers = []
+    
+    for index, question in enumerate(questions, start=1):
+        print(f"{index}. {question}: ")
+        answer = input("Your answer: ")
+        answers.append({
+            "question": question,
+            "answer": answer
+        })
+        
+    return answers
+        
+def generate_technical_specification(category, difficulty, language, answers):
+    answers_text = "\n".join([f"{a["question"]} - {a["answer"]}" for a in answers])
+    
+    prompt = f"""
+            You are a senior technical architect.
+
+            Project parameters:
+            Category: {category}
+            Difficulty: {difficulty}
+            Language: {language}
+
+            User answers:
+            {answers_text}
+
+            Generate a detailed technical specification.
+
+            Structure it as:
+            1. Overview
+            2. Functional requirements
+            3. Non-functional requirements
+            4. Architecture
+            5. File structure
+            6. Implementation steps
+
+            Do not write anything except JSON.
+    """
+
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=prompt
+    )
+    
+    return response.text
+            
 while True:
     choose_task_category()
     choose_difficulty()
     choose_language()
 
-    print(f"You have chosen: \ncategory: {first_prompt[0]}, \ndifficulty: {first_prompt[1]}, \nlanguage: {first_prompt[2]}")
+    category = first_prompt[0]
+    difficulty = first_prompt[1]
+    language = first_prompt[2]
+
+    print(f"\nYou have chosen:")
+    print(f"Category: {category}")
+    print(f"Difficulty: {difficulty}")
+    print(f"Language: {language}")
+    print("\nGenerating clarification questions...")
     
-    result = send_prompt(first_prompt)
-    print("\nWait for response!")
-    print(result)
+    raw_response = send_prompt(first_prompt)
+    data = parse_json(raw_response)
+    
+    questions = data["questions"]
+    
+    answers = collect_answers(questions)
+    
+    technical_specification = generate_technical_specification(category, difficulty, language, answers)
+    print("\n===== TECHNICAL SPECIFICATION =====\n")
+    print(technical_specification)
     
     break
