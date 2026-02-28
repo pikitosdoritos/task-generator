@@ -1,6 +1,20 @@
+from dotenv import load_dotenv
+from google import genai
+import os
+
+load_dotenv()
+
+API_KEY = os.getenv("API_KEY")
+
+if not API_KEY:
+    raise ValueError("API_KEY not found in environment variables")
+
+client = genai.Client(api_key=API_KEY)
+
 res = {}
 
 first_prompt = []
+
 
 task_categories = [
     "Turn-based games",
@@ -102,11 +116,26 @@ def choose_language():
     language = input("Choose a language(enter the number from 1 to 15): ")
     if language.isdigit() and 1 <= int(language) <= 15:
         first_prompt.append(languages[int(language) - 1])
+        
+def send_prompt(first_prompt):
+    prompt = f"Write a {first_prompt[1]} {first_prompt[0]} in {first_prompt[2]}"
     
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=prompt
+    )
+    
+    return response.text
+
 while True:
     choose_task_category()
     choose_difficulty()
     choose_language()
 
     print(f"You have chosen: \ncategory: {first_prompt[0]}, \ndifficulty: {first_prompt[1]}, \nlanguage: {first_prompt[2]}")
+    
+    result = send_prompt(first_prompt)
+    print("\nWait for response!")
+    print(result)
+    
     break
