@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 from google import genai
+import json
 import os
 
 load_dotenv()
@@ -12,9 +13,7 @@ if not API_KEY:
 client = genai.Client(api_key=API_KEY)
 
 res = {}
-
 first_prompt = []
-
 
 task_categories = [
     "Turn-based games",
@@ -118,7 +117,32 @@ def choose_language():
         first_prompt.append(languages[int(language) - 1])
         
 def send_prompt(first_prompt):
-    prompt = f"Write a {first_prompt[1]} {first_prompt[0]} in {first_prompt[2]}"
+    category = first_prompt[0]
+    difficulty = first_prompt[1]
+    language = first_prompt[2]
+    
+    prompt = f"""
+You are a senior software architect.
+
+Project parameters:
+Category: {category}
+Difficulty: {difficulty}
+Language: {language}
+
+Generate 5 clarification questions.
+
+Return STRICTLY in JSON format like this:
+
+{{
+  "questions": [
+    "Question 1",
+    "Question 2",
+    "Question 3"
+  ]
+}}
+
+Do not write anything except JSON.
+"""
     
     response = client.models.generate_content(
         model="gemini-2.5-flash",
