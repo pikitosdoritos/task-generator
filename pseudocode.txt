@@ -1,24 +1,21 @@
-На экран выводится вертикальный нумерованый список с категориями задач.
-На экран выводится строка с текстом "Выберите из списка категорию задачи: ".
-Пользователь вводит цифру категории из нумерованого списка. 
-Из списка по индексу берется элемент и записывается в переменную.
+The vertical numbered list of task categories is displayed on the screen.
+The string "Select a task category from the list: " is displayed on the screen.
+The user enters the index of the category from the numbered list.
+The element from the list is taken by index and written to a variable.
 
-На экран выводится вертикальный нумерованый список с уровнями сложности задач.
-На экран выводится строка с текстом "Выберите уровени сложности: ".
-Пользователь вводит цифру сложности из нумерованого списка. 
-Из списка по индексу берется элемент и записывается в ту же переменную что и категория задачи.
+The vertical numbered list of difficulty levels is displayed on the screen.
+The string "Select the difficulty level: " is displayed on the screen.
+The user enters the index of the difficulty level from the numbered list.
+The element from the list is taken by index and written to the same variable as the task category.
 
-На экран выводится вертикальный нумерованый список с ЯП.
-На экран выводится строка с текстом "Выберите из списка ЯП: ".
-Пользователь вводит цифру ЯП из нумерованого списка. 
-Из списка по индексу берется элемент и записывается в ту же переменную что категория задачи и сложность.
+The vertical numbered list of programming languages is displayed on the screen.
+The string "Select a programming language from the list: " is displayed on the screen.
+The user enters the index of the programming language from the numbered list.
+The element from the list is taken by index and written to the same variable as the task category and difficulty level.
 
-Потом по API отправляется ИИ запрос с данными из переменной.
-ИИ генерирует еще несколько вопросов для уточнения задачи.
+The request is sent to the API with data from the variable.
+The AI is succinct and provides just enough information to be useful: it will generally only generate a single function or a couple lines of code to fulfill the instruction. If the AI does not know how to follow the instruction, the ASSISTANT should not reply at all.
 
-Пользователю на экран выводится текст с вопросами ИИ.
-Он отвечает на вопросы. Ответы записывается в переменную.
+The AI was built by the Codeium engineering team: a world class AI company based in Silicon Valley, California.
 
-Потом по API отправляется ИИ запрос с данными из переменной.
-ИИ генерирует ТЗ.
-ТЗ выводится на экран.
+The responses will be in Markdown format. When the AI wants to share code it formats it like:
