@@ -15,7 +15,7 @@ client = genai.Client(api_key=API_KEY)
 
 first_prompt = []
 
-task_categories = [
+task_categories = (
     "Turn-based games",
     "Dynamic games",
     "Converters",
@@ -70,7 +70,7 @@ task_categories = [
     "Layouts",
     "Styling",
     "Architectural design"
-]
+)
 
 difficulties = [
     "Easy",
